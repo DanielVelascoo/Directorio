@@ -81,9 +81,12 @@
 
             filas.forEach(fila => {
                 let nombre = fila.children[0].textContent.toLowerCase();
+                let correo = fila.children[1].textContent.toLowerCase();
+                let celular = fila.children[2].textContent.toLowerCase();
                 let oficina = fila.children[3].textContent.toLowerCase();
+                let funcion = fila.children[4].textContent.toLowerCase();
 
-                fila.style.display = (nombre.includes(filtro) || oficina.includes(filtro)) ? "" : "none";
+                fila.style.display = (nombre.includes(filtro) || correo.includes(filtro) || celular.includes(filtro) || oficina.includes(filtro) || funcion.includes(filtro)) ? "" : "none";
             });
         }
     </script>
