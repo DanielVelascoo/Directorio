@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -19,6 +19,10 @@
         <div id="directorio-container">
             <table id="directorio">
                 <thead>
+                    <!-- Caja de búsqueda -->
+                    <div class="search-box">
+                        <input type="text" id="search" placeholder="Buscar por nombre u oficina..." onkeyup="filtrarDirectorio()">
+                    </div>
                     <tr>
                         <th>Nombres</th>
                         <th>Correo @sena</th>
@@ -74,8 +78,14 @@
             let filas = document.querySelectorAll("#directorio tbody tr");
             
             filas.forEach(fila => {
-                let nombre = fila.children[0].textContent.toLowerCase();
-                fila.style.display = nombre.includes(filtro) ? "" : "none";
+                let nombre = fila.children[0].textContent.toLowerCase(); // Columna 0: Nombre
+                let oficina = fila.children[3].textContent.toLowerCase(); // Columna 3: Oficina
+
+                if (nombre.includes(filtro) || oficina.includes(filtro)) {
+                    fila.style.display = "";
+                } else {
+                    fila.style.display = "none";
+                }
             });
         }
     </script>
