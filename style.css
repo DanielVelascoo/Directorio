@@ -120,3 +120,39 @@ th {
     background-color: #2c3e50;
     color: white;
 }
+/* Diseño Responsive */
+@media screen and (max-width: 768px) {
+    .search-box {
+        width: 90%; /* El buscador ocupa más espacio en móviles */
+    }
+
+    #directorio-container {
+        overflow-x: auto; /* Scroll horizontal en móviles */
+    }
+
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap; /* Evita que el texto se corte */
+    }
+
+    th, td {
+        padding: 8px; /* Reduce padding en móviles */
+        font-size: 14px; /* Tipografía más pequeña */
+    }
+
+    h1 {
+        font-size: 2em; /* Reduce tamaño del título */
+    }
+
+    button {
+        width: 100%; /* Botones ocupan todo el ancho */
+        padding: 12px; /* Reduce padding */
+    }
+
+    .buttons {
+        flex-direction: column; /* Botones en columna */
+        width: 90%;
+    }
+}
