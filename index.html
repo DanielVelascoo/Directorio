@@ -5,24 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Directorio de Dependencias Centro Agropecuario 2025</title>
     <link rel="stylesheet" href="style.css">
-    
 </head>
 <body>
     <div class="container">
-        <img src="logo sena.png" alt="" class="logo">
+        <img src="logo sena.png" alt="Logo SENA" class="logo">
         <h1 class="titulo">Directorio de Dependencias Centro Agropecuario 2025</h1>
-        
+
         <div class="buttons">
-            <button onclick="mostrarDirectorio()">Ver Directorio</button>
-            <!-- <button onclick="window.open('https://forms.gle/pnUWvv1qFPMAktr97', '_blank')">Añadir Información</button> -->
+            <button id="btn-ver-directorio">Ver Directorio</button>
         </div>
+
+        <!-- Caja de búsqueda fuera de la tabla -->
+        <div class="search-box" id="search-container" style="display: none;">
+            <input type="text" id="search" placeholder="Buscar por nombre u oficina..." onkeyup="filtrarDirectorio()">
+        </div>
+
+        <!-- Contenedor de la tabla -->
         <div id="directorio-container">
             <table id="directorio">
                 <thead>
-                    <!-- Caja de búsqueda -->
-                    <div class="search-box">
-                        <input type="text" id="search" placeholder="Buscar por nombre u oficina..." onkeyup="filtrarDirectorio()">
-                    </div>
                     <tr>
                         <th>Nombres</th>
                         <th>Correo @sena</th>
@@ -43,20 +44,19 @@
             try {
                 let response = await fetch(sheetURL);
                 let data = await response.text();
-                
-                console.log("Datos obtenidos:", data); // Ver qué llega desde el CSV
-        
+                console.log("Datos obtenidos:", data); // Para depuración
+
                 let filas = data.split("\n").map(row => row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/));
                 let tbody = document.querySelector("#directorio tbody");
                 tbody.innerHTML = "";
-        
+
                 for (let i = 1; i < filas.length; i++) {
                     let fila = filas[i];
-                    if (fila.length < 5) continue; // Ajustado de 6 a 5
-        
+                    if (fila.length < 5) continue;
+
                     let tr = document.createElement("tr");
-        
-                    for (let j = 0; j < 5; j++) { // Cambio de j=1 a j=0
+
+                    for (let j = 0; j < 5; j++) { 
                         let td = document.createElement("td");
                         td.textContent = fila[j].trim();
                         tr.appendChild(td);
@@ -68,26 +68,25 @@
             }
         }
 
-        function mostrarDirectorio() {
+        document.getElementById("btn-ver-directorio").addEventListener("click", function () {
             document.getElementById("directorio-container").style.display = "block";
+            document.getElementById("search-container").style.display = "flex"; // Muestra la caja de búsqueda
+            this.style.display = "none"; // Oculta el botón después de hacer clic
             cargarDatos();
-        }
+        });
 
         function filtrarDirectorio() {
             let filtro = document.getElementById("search").value.toLowerCase();
             let filas = document.querySelectorAll("#directorio tbody tr");
-            
-            filas.forEach(fila => {
-                let nombre = fila.children[0].textContent.toLowerCase(); // Columna 0: Nombre
-                let oficina = fila.children[3].textContent.toLowerCase(); // Columna 3: Oficina
 
-                if (nombre.includes(filtro) || oficina.includes(filtro)) {
-                    fila.style.display = "";
-                } else {
-                    fila.style.display = "none";
-                }
+            filas.forEach(fila => {
+                let nombre = fila.children[0].textContent.toLowerCase();
+                let oficina = fila.children[3].textContent.toLowerCase();
+
+                fila.style.display = (nombre.includes(filtro) || oficina.includes(filtro)) ? "" : "none";
             });
         }
     </script>
 </body>
 </html>
+
