@@ -28,10 +28,9 @@
                         <th>Nombres</th>
                         <th>Correo @sena</th>
                         <th>Celular</th>
-                        <th>Oficina</th>
                         <th>Funciones</th>
                     </tr>
-                </thead>
+                </thead>                
                 <tbody></tbody>
             </table>
         </div>
@@ -50,18 +49,60 @@
                 let tbody = document.querySelector("#directorio tbody");
                 tbody.innerHTML = "";
 
+                // Agrupamos los datos por oficina
+                let oficinas = {};
+
                 for (let i = 1; i < filas.length; i++) {
                     let fila = filas[i];
                     if (fila.length < 5) continue;
 
-                    let tr = document.createElement("tr");
+                    let nombre = fila[0].trim();
+                    let correo = fila[1].trim();
+                    let celular = fila[2].trim();
+                    let oficina = fila[3].trim();
+                    let funcion = fila[4].trim();
 
-                    for (let j = 0; j < 5; j++) { 
-                        let td = document.createElement("td");
-                        td.textContent = fila[j].trim();
-                        tr.appendChild(td);
+                    if (!oficinas[oficina]) {
+                        oficinas[oficina] = [];
                     }
-                    tbody.appendChild(tr);
+
+                    oficinas[oficina].push({ nombre, correo, celular, funcion });
+                }
+
+                // Crear filas en la tabla para cada oficina y las personas asociadas
+                for (let oficina in oficinas) {
+                    // Crear una fila con el nombre de la oficina como título
+                    let trOficina = document.createElement("tr");
+                    let tdOficina = document.createElement("td");
+                    tdOficina.colSpan = 4; // Cambié esto de 5 a 4 para que ocupe solo las 4 columnas restantes
+                    tdOficina.style.fontWeight = "bold";
+                    tdOficina.style.backgroundColor = "#f0f0f0"; // Puedes agregar estilo aquí
+                    tdOficina.textContent = oficina;
+                    trOficina.appendChild(tdOficina);
+                    tbody.appendChild(trOficina);
+
+                    // Crear filas para cada persona en esa oficina
+                    oficinas[oficina].forEach(persona => {
+                        let trPersona = document.createElement("tr");
+
+                        let tdNombre = document.createElement("td");
+                        tdNombre.textContent = persona.nombre;
+                        trPersona.appendChild(tdNombre);
+
+                        let tdCorreo = document.createElement("td");
+                        tdCorreo.textContent = persona.correo;
+                        trPersona.appendChild(tdCorreo);
+
+                        let tdCelular = document.createElement("td");
+                        tdCelular.textContent = persona.celular;
+                        trPersona.appendChild(tdCelular);
+
+                        let tdFunciones = document.createElement("td");
+                        tdFunciones.textContent = persona.funcion;
+                        trPersona.appendChild(tdFunciones);
+
+                        tbody.appendChild(trPersona);
+                    });
                 }
             } catch (error) {
                 console.error("Error al cargar datos:", error);
@@ -80,11 +121,11 @@
             let filas = document.querySelectorAll("#directorio tbody tr");
 
             filas.forEach(fila => {
-                let nombre = fila.children[0].textContent.toLowerCase();
-                let correo = fila.children[1].textContent.toLowerCase();
-                let celular = fila.children[2].textContent.toLowerCase();
-                let oficina = fila.children[3].textContent.toLowerCase();
-                let funcion = fila.children[4].textContent.toLowerCase();
+                let nombre = fila.children[0]?.textContent?.toLowerCase() || "";
+                let correo = fila.children[1]?.textContent?.toLowerCase() || "";
+                let celular = fila.children[2]?.textContent?.toLowerCase() || "";
+                let oficina = fila.children[3]?.textContent?.toLowerCase() || "";
+                let funcion = fila.children[4]?.textContent?.toLowerCase() || "";
 
                 fila.style.display = (nombre.includes(filtro) || correo.includes(filtro) || celular.includes(filtro) || oficina.includes(filtro) || funcion.includes(filtro)) ? "" : "none";
             });
