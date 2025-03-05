@@ -1,19 +1,19 @@
 /* Font para el título con SemiBold */
 @font-face {
-    font-family: 'WorkSans';
+    font-family: 'WorkSans-SemiBold';
     src: url('WorkSans-SemiBold.ttf') format('truetype');
     font-weight: 600;
 }
 
 /* Font para el resto del texto */
 @font-face {
-    font-family: 'WorkSans';
+    font-family: 'WorkSans-Regular';
     src: url('WorkSans-Regular.ttf') format('truetype');
     font-weight: 400;
 }
 
+
 body {
-    font-family: 'WorkSans', Arial, sans-serif;
     text-align: center;
     background: linear-gradient(to right, #2c3e50, #4ca1af);
     color: white;
@@ -40,9 +40,11 @@ body {
 }
 
 h1 {
+    font-family: 'WorkSans-SemiBold', Arial, sans-serif;
     font-size: 2.5em;
     margin-bottom: 20px;
 }
+
 
 .search-box {
     display: flex;
@@ -109,6 +111,7 @@ table {
 }
 
 th, td {
+    font-family: 'WorkSans-Regular', Arial, sans-serif;
     border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
@@ -152,4 +155,5 @@ th {
         width: 90%;
     }
 }
+
 
