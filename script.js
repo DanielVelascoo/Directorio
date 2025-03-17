@@ -7,46 +7,62 @@ const ordenOficinas = [
     "Administración Educativa",
     "Fondo Emprender",
     "Articuladora de planeacion",
-    "Competencia laborales",
+    "Competencias laborales",
     "Financiera",
     "Programas especiales",
     "Bienestar al aprendiz",
     "Administración de la granja",
     "Planeación",
-    "Tesorería"
+    "Tesorería",
+    "Comunicación Social",
+    "Coordinación de Formación"
 ];
+
+function normalizarOficina(nombre) {
+    const mapeo = {
+        "Coordinación Academica": "Coordinación Académica",
+        "Competencia laborales": "Competencias laborales"
+    };
+    return mapeo[nombre] || nombre;
+}
 
 async function cargarDatos(url) {
     try {
         let response = await fetch(url);
         let data = await response.text();
+
         let filas = data.split("\n").map(row => row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/));
 
         let tbody = document.querySelector("#directorio tbody");
+
         tbody.innerHTML = "";
 
         let oficinas = {};
         let funcionariosMap = new Map();
 
-        // Obtener índices de las columnas
         let encabezados = filas[0].map(e => e.trim().toLowerCase());
+
+        let indiceDocumento = encabezados.indexOf("numdocumento");
         let indiceNombres = encabezados.indexOf("nombres");
         let indiceCorreo = encabezados.indexOf("correo");
         let indiceCelular = encabezados.indexOf("celular");
         let indiceOficina = encabezados.indexOf("oficina");
         let indiceFunciones = encabezados.indexOf("funcionalidad");
         let indiceSuperior = encabezados.indexOf("superior_id");
-        let indiceDocumento = encabezados.indexOf("numdocumento");
+
+        if (indiceDocumento === -1 || indiceNombres === -1) {
+            console.error("Error: No se encontraron las columnas requeridas en el CSV.");
+            return;
+        }
 
         for (let i = 1; i < filas.length; i++) {
             let fila = filas[i].map(e => e.trim());
             if (fila.every(celda => celda === "")) continue;
-        
-            // ✅ Quitar espacios innecesarios en los nombres de oficina
-            let oficina = (indiceOficina !== -1) ? fila[indiceOficina].trim() || "Sin Oficina" : "Sin Categoría";
+
+            let oficina = normalizarOficina(fila[indiceOficina]?.trim() || "Sin Oficina");
             let documento = fila[indiceDocumento]?.trim() || "Sin Documento";
             let superior = fila[indiceSuperior]?.trim() || null;
-        
+
             let funcionario = {
                 numDocumento: documento,
                 nombres: fila[indiceNombres]?.trim() || "Nombre desconocido",
@@ -55,42 +71,36 @@ async function cargarDatos(url) {
                 funciones: fila[indiceFunciones]?.trim() || "Sin funciones",
                 subordinados: []
             };
-        
+
             funcionariosMap.set(documento, funcionario);
-        
+
             if (!oficinas[oficina]) {
                 oficinas[oficina] = [];
             }
         }
-        
 
-        // Asignar subordinados a sus superiores
-funcionariosMap.forEach((funcionario, documento) => {
-    let superior = filas.find(f => f[indiceDocumento] === documento)?.[indiceSuperior];
+        funcionariosMap.forEach((funcionario, documento) => {
+            let superior = filas.find(f => f[indiceDocumento] === documento)?.[indiceSuperior];
 
-    if (superior && funcionariosMap.has(superior)) {
-        funcionariosMap.get(superior).subordinados.push(funcionario);
-    } else {
-        let oficina = filas.find(f => f[indiceDocumento] === documento)?.[indiceOficina] || "Sin Oficina";
-        
-        // ⚠️ Corrección: Asegurar que la oficina existe
-        if (!oficina || !oficinas[oficina]) {
-            console.warn(`Oficina "${oficina}" no encontrada. Creando nueva entrada.`);
-            oficinas[oficina] = [];
-        }
+            if (superior && funcionariosMap.has(superior)) {
+                funcionariosMap.get(superior).subordinados.push(funcionario);
+            } else {
+                let oficina = normalizarOficina(filas.find(f => f[indiceDocumento] === documento)?.[indiceOficina] || "Sin Oficina");
 
-        oficinas[oficina].push(funcionario);
-    }
-});
+                if (!oficinas[oficina]) {
+                    oficinas[oficina] = [];
+                }
 
-        // Ordenar oficinas
+                oficinas[oficina].push(funcionario);
+            }
+        });
+
         let oficinasOrdenadas = Object.keys(oficinas).sort((a, b) => {
             let indexA = ordenOficinas.indexOf(a);
             let indexB = ordenOficinas.indexOf(b);
             return (indexA !== -1 ? indexA : 999) - (indexB !== -1 ? indexB : 999);
         });
 
-        // Renderizar oficinas y funcionarios en el orden jerárquico
         oficinasOrdenadas.forEach(oficina => {
             let trOficina = document.createElement("tr");
             let tdOficina = document.createElement("td");
@@ -127,10 +137,15 @@ funcionariosMap.forEach((funcionario, documento) => {
 
             oficinas[oficina].forEach(funcionario => renderizarFuncionario(funcionario));
         });
+
     } catch (error) {
         console.error("Error al cargar datos:", error);
     }
+
+    document.getElementById("directorio-container").style.display = "block";
+    document.getElementById("search-container").style.display = "block";
 }
 
-// Evento para cargar funcionarios con jerarquía de oficinas
-document.getElementById("btn-ver-funcionarios").addEventListener("click", () => cargarDatos(funcionariosURL));
+document.getElementById("btn-ver-funcionarios").addEventListener("click", () => {
+    cargarDatos(funcionariosURL);
+});
