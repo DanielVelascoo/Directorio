@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directorio de Instructores Centro Agropecuario 2025</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <img src="logo sena.png" alt="Logo SENA" class="logo">
+        <h1 class="titulo">Directorio de Instructores Centro Agropecuario 2025</h1>
+
+        <div class="buttons">
+            <button id="btn-ver-instructores">Ver Directorio Instructores</button>
+            <button onclick="window.location.href='index.html'">Volver a Funcionarios</button>
+        </div>
+
+        <div class="search-box" id="search-container">
+            <input type="text" id="search" placeholder="Buscar por nombre o programa..." onkeyup="filtrarDirectorio()">
+        </div>
+
+        <div id="directorio-container">
+            <table id="directorio">
+                <thead>
+                    <tr>
+                        <th>Identificación</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Celular</th>
+                        <th>Programa</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="instructores.js"></script>
+</body>
+
+</html>

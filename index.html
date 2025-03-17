@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Directorio de Dependencias Centro Agropecuario 2025</title>
     <link rel="stylesheet" href="style.css">
-    
 </head>
+
 <body>
     <div class="container">
-        <img src="logo sena.png" alt="" class="logo">
+        <img src="logo sena.png" alt="Logo SENA" class="logo">
         <h1 class="titulo">Directorio de Dependencias Centro Agropecuario 2025</h1>
-        
+
         <div class="buttons">
-            <button onclick="mostrarDirectorio()">Ver Directorio</button>
-            <!-- <button onclick="window.open('https://forms.gle/pnUWvv1qFPMAktr97', '_blank')">Añadir Información</button> -->
+            <button id="btn-ver-funcionarios">Ver Directorio Funcionarios</button>
+            <div class="buttons">
+                <button onclick="window.location.href='instructores.html'">Ver Directorio de Instructores</button>
+            </div>
         </div>
-        <div id="directorio-container">
+
+        <div class="search-box" id="search-container" style="display: none;">
+            <input type="text" id="search" placeholder="Buscar por nombre u oficina..." onkeyup="filtrarDirectorio()">
+        </div>
+
+        <div id="directorio-container" style="display: none;">
             <table id="directorio">
                 <thead>
-                    <!-- Caja de búsqueda -->
-                    <div class="search-box">
-                        <input type="text" id="search" placeholder="Buscar por nombre u oficina..." onkeyup="filtrarDirectorio()">
-                    </div>
                     <tr>
                         <th>Nombres</th>
                         <th>Correo @sena</th>
                         <th>Celular</th>
-                        <th>Oficina</th>
                         <th>Funciones</th>
                     </tr>
                 </thead>
@@ -36,58 +39,7 @@
         </div>
     </div>
 
-    <script>
-        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSgLoaeGosvybo38c9bI3IDk9DGUXeAR9CtMgVhKOmGb_NX7cznU3flT9TzV4pBzkTOMywY2hF6e9I/pub?output=csv";
-
-        async function cargarDatos() {
-            try {
-                let response = await fetch(sheetURL);
-                let data = await response.text();
-                
-                console.log("Datos obtenidos:", data); // Ver qué llega desde el CSV
-        
-                let filas = data.split("\n").map(row => row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/));
-                let tbody = document.querySelector("#directorio tbody");
-                tbody.innerHTML = "";
-        
-                for (let i = 1; i < filas.length; i++) {
-                    let fila = filas[i];
-                    if (fila.length < 5) continue; // Ajustado de 6 a 5
-        
-                    let tr = document.createElement("tr");
-        
-                    for (let j = 0; j < 5; j++) { // Cambio de j=1 a j=0
-                        let td = document.createElement("td");
-                        td.textContent = fila[j].trim();
-                        tr.appendChild(td);
-                    }
-                    tbody.appendChild(tr);
-                }
-            } catch (error) {
-                console.error("Error al cargar datos:", error);
-            }
-        }
-
-        function mostrarDirectorio() {
-            document.getElementById("directorio-container").style.display = "block";
-            cargarDatos();
-        }
-
-        function filtrarDirectorio() {
-            let filtro = document.getElementById("search").value.toLowerCase();
-            let filas = document.querySelectorAll("#directorio tbody tr");
-            
-            filas.forEach(fila => {
-                let nombre = fila.children[0].textContent.toLowerCase(); // Columna 0: Nombre
-                let oficina = fila.children[3].textContent.toLowerCase(); // Columna 3: Oficina
-
-                if (nombre.includes(filtro) || oficina.includes(filtro)) {
-                    fila.style.display = "";
-                } else {
-                    fila.style.display = "none";
-                }
-            });
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
+
 </html>
