@@ -1,48 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
-<<<<<<< HEAD
-
-=======
->>>>>>> 3104da713b63b7bf7bd1c9f6ef6bab3f656cf626
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Directorio de Dependencias Centro Agropecuario 2025</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<<<<<<< HEAD
-
-=======
->>>>>>> 3104da713b63b7bf7bd1c9f6ef6bab3f656cf626
 <body>
     <div class="container">
         <img src="logo sena.png" alt="Logo SENA" class="logo">
         <h1 class="titulo">Directorio de Dependencias Centro Agropecuario 2025</h1>
 
         <div class="buttons">
-<<<<<<< HEAD
             <button id="btn-ver-funcionarios">Ver Directorio Funcionarios</button>
             <div class="buttons">
                 <button onclick="window.location.href='instructores.html'">Ver Directorio de Instructores</button>
             </div>
         </div>
 
-=======
-            <button id="btn-ver-directorio">Ver Directorio</button>
-        </div>
-
-        <!-- Caja de búsqueda fuera de la tabla -->
->>>>>>> 3104da713b63b7bf7bd1c9f6ef6bab3f656cf626
         <div class="search-box" id="search-container" style="display: none;">
             <input type="text" id="search" placeholder="Buscar por nombre u oficina..." onkeyup="filtrarDirectorio()">
         </div>
 
-<<<<<<< HEAD
         <div id="directorio-container" style="display: none;">
-=======
-        <!-- Contenedor de la tabla -->
-        <div id="directorio-container">
->>>>>>> 3104da713b63b7bf7bd1c9f6ef6bab3f656cf626
             <table id="directorio">
                 <thead>
                     <tr>
@@ -51,118 +31,13 @@
                         <th>Celular</th>
                         <th>Funciones</th>
                     </tr>
-<<<<<<< HEAD
                 </thead>
-=======
-                </thead>                
->>>>>>> 3104da713b63b7bf7bd1c9f6ef6bab3f656cf626
                 <tbody></tbody>
             </table>
         </div>
     </div>
 
-<<<<<<< HEAD
     <script src="script.js"></script>
 </body>
 
 </html>
-=======
-    <script>
-        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSgLoaeGosvybo38c9bI3IDk9DGUXeAR9CtMgVhKOmGb_NX7cznU3flT9TzV4pBzkTOMywY2hF6e9I/pub?output=csv";
-
-        async function cargarDatos() {
-            try {
-                let response = await fetch(sheetURL);
-                let data = await response.text();
-                console.log("Datos obtenidos:", data); // Para depuración
-
-                let filas = data.split("\n").map(row => row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/));
-                let tbody = document.querySelector("#directorio tbody");
-                tbody.innerHTML = "";
-
-                // Agrupamos los datos por oficina
-                let oficinas = {};
-
-                for (let i = 1; i < filas.length; i++) {
-                    let fila = filas[i];
-                    if (fila.length < 5) continue;
-
-                    let nombre = fila[0].trim();
-                    let correo = fila[1].trim();
-                    let celular = fila[2].trim();
-                    let oficina = fila[3].trim();
-                    let funcion = fila[4].trim();
-
-                    if (!oficinas[oficina]) {
-                        oficinas[oficina] = [];
-                    }
-
-                    oficinas[oficina].push({ nombre, correo, celular, funcion });
-                }
-
-                // Crear filas en la tabla para cada oficina y las personas asociadas
-                for (let oficina in oficinas) {
-                    // Crear una fila con el nombre de la oficina como título
-                    let trOficina = document.createElement("tr");
-                    let tdOficina = document.createElement("td");
-                    tdOficina.colSpan = 4; // Cambié esto de 5 a 4 para que ocupe solo las 4 columnas restantes
-                    tdOficina.style.fontWeight = "bold";
-                    tdOficina.style.backgroundColor = "#f0f0f0"; // Puedes agregar estilo aquí
-                    tdOficina.textContent = oficina;
-                    trOficina.appendChild(tdOficina);
-                    tbody.appendChild(trOficina);
-
-                    // Crear filas para cada persona en esa oficina
-                    oficinas[oficina].forEach(persona => {
-                        let trPersona = document.createElement("tr");
-
-                        let tdNombre = document.createElement("td");
-                        tdNombre.textContent = persona.nombre;
-                        trPersona.appendChild(tdNombre);
-
-                        let tdCorreo = document.createElement("td");
-                        tdCorreo.textContent = persona.correo;
-                        trPersona.appendChild(tdCorreo);
-
-                        let tdCelular = document.createElement("td");
-                        tdCelular.textContent = persona.celular;
-                        trPersona.appendChild(tdCelular);
-
-                        let tdFunciones = document.createElement("td");
-                        tdFunciones.textContent = persona.funcion;
-                        trPersona.appendChild(tdFunciones);
-
-                        tbody.appendChild(trPersona);
-                    });
-                }
-            } catch (error) {
-                console.error("Error al cargar datos:", error);
-            }
-        }
-
-        document.getElementById("btn-ver-directorio").addEventListener("click", function () {
-            document.getElementById("directorio-container").style.display = "block";
-            document.getElementById("search-container").style.display = "flex"; // Muestra la caja de búsqueda
-            this.style.display = "none"; // Oculta el botón después de hacer clic
-            cargarDatos();
-        });
-
-        function filtrarDirectorio() {
-            let filtro = document.getElementById("search").value.toLowerCase();
-            let filas = document.querySelectorAll("#directorio tbody tr");
-
-            filas.forEach(fila => {
-                let nombre = fila.children[0]?.textContent?.toLowerCase() || "";
-                let correo = fila.children[1]?.textContent?.toLowerCase() || "";
-                let celular = fila.children[2]?.textContent?.toLowerCase() || "";
-                let oficina = fila.children[3]?.textContent?.toLowerCase() || "";
-                let funcion = fila.children[4]?.textContent?.toLowerCase() || "";
-
-                fila.style.display = (nombre.includes(filtro) || correo.includes(filtro) || celular.includes(filtro) || oficina.includes(filtro) || funcion.includes(filtro)) ? "" : "none";
-            });
-        }
-    </script>
-</body>
-</html>
-
->>>>>>> 3104da713b63b7bf7bd1c9f6ef6bab3f656cf626
