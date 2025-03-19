@@ -30,18 +30,14 @@ async function cargarDatos(url) {
     try {
         let response = await fetch(url);
         let data = await response.text();
-
         let filas = data.split("\n").map(row => row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/));
-
         let tbody = document.querySelector("#directorio tbody");
-
         tbody.innerHTML = "";
 
-        let oficinas = {};
         let funcionariosMap = new Map();
+        let oficinas = {};
 
         let encabezados = filas[0].map(e => e.trim().toLowerCase());
-
         let indiceDocumento = encabezados.indexOf("numdocumento");
         let indiceNombres = encabezados.indexOf("nombres");
         let indiceCorreo = encabezados.indexOf("correo");
@@ -55,52 +51,50 @@ async function cargarDatos(url) {
             return;
         }
 
+        // 1. Crear funcionarios en el mapa
         for (let i = 1; i < filas.length; i++) {
             let fila = filas[i].map(e => e.trim());
             if (fila.every(celda => celda === "")) continue;
 
-            let oficina = normalizarOficina(fila[indiceOficina]?.trim() || "Sin Oficina");
-            let documento = fila[indiceDocumento]?.trim() || "Sin Documento";
-            let superior = fila[indiceSuperior]?.trim() || null;
+            let documento = fila[indiceDocumento] || "Sin Documento";
+            let oficina = normalizarOficina(fila[indiceOficina] || "Sin Oficina");
+            let superior = fila[indiceSuperior] || null;
 
             let funcionario = {
                 numDocumento: documento,
-                nombres: fila[indiceNombres]?.trim() || "Nombre desconocido",
-                correo: fila[indiceCorreo]?.trim() || "Sin correo",
-                celular: fila[indiceCelular]?.trim() || "Sin celular",
-                funciones: fila[indiceFunciones]?.trim() || "Sin funciones",
-                subordinados: []
+                nombres: fila[indiceNombres] || "Nombre desconocido",
+                correo: fila[indiceCorreo] || "Sin correo",
+                celular: fila[indiceCelular] || "Sin celular",
+                funciones: fila[indiceFunciones] || "Sin funciones",
+                subordinados: [],
+                oficina: oficina,
+                superior: superior
             };
 
             funcionariosMap.set(documento, funcionario);
-
-            if (!oficinas[oficina]) {
-                oficinas[oficina] = [];
-            }
         }
 
+        // 2. Anidar subordinados dentro de sus superiores
         funcionariosMap.forEach((funcionario, documento) => {
-            let superior = filas.find(f => f[indiceDocumento] === documento)?.[indiceSuperior];
-
-            if (superior && funcionariosMap.has(superior)) {
-                funcionariosMap.get(superior).subordinados.push(funcionario);
+            if (funcionario.superior && funcionariosMap.has(funcionario.superior)) {
+                funcionariosMap.get(funcionario.superior).subordinados.push(funcionario);
             } else {
-                let oficina = normalizarOficina(filas.find(f => f[indiceDocumento] === documento)?.[indiceOficina] || "Sin Oficina");
-
+                let oficina = funcionario.oficina;
                 if (!oficinas[oficina]) {
                     oficinas[oficina] = [];
                 }
-
                 oficinas[oficina].push(funcionario);
             }
         });
 
+        // 3. Ordenar oficinas según la lista establecida
         let oficinasOrdenadas = Object.keys(oficinas).sort((a, b) => {
             let indexA = ordenOficinas.indexOf(a);
             let indexB = ordenOficinas.indexOf(b);
             return (indexA !== -1 ? indexA : 999) - (indexB !== -1 ? indexB : 999);
         });
 
+        // 4. Renderizar la vista correctamente
         oficinasOrdenadas.forEach(oficina => {
             let trOficina = document.createElement("tr");
             let tdOficina = document.createElement("td");
