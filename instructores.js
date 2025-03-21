@@ -80,5 +80,6 @@ async function cargarInstructores() {
 
 document.getElementById("btn-ver-instructores").addEventListener("click", function () {
     document.getElementById("directorio-container").style.display = "block";
+    document.getElementById("search-container").style.display = "block"; // MOSTRAR LA BARRA DE BÚSQUEDA
     cargarInstructores();
 });
