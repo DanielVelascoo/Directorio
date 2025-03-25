@@ -7,6 +7,8 @@ const hojas = {
     "Economia Popular": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSD7uj2HJ5ecqX1xVn0j64ro-5SmfedFnmDFwv-BNsduQbnl_BSNQO8vyN0x5ul50JqeFaHd41FFNra/pub?gid=2126129033&single=true&output=csv"
 };
 
+
+
 async function cargarInstructores() {
     let tbody = document.querySelector("#directorio tbody");
     tbody.innerHTML = "";
@@ -76,6 +78,37 @@ async function cargarInstructores() {
             console.error(`Error al cargar datos de ${nombreHoja}:`, error);
         }
     }
+}
+
+
+function filtrarDirectorio() {
+    let input = document.getElementById("search").value.toLowerCase();
+    let filas = document.querySelectorAll("#directorio tbody tr");
+
+    filas.forEach(fila => {
+        let columnas = fila.getElementsByTagName("td");
+
+        if (columnas.length === 1) {
+            // Es un encabezado de equipo (nombre del equipo en una sola celda con colspan)
+            let equipo = columnas[0].textContent.toLowerCase();
+            fila.dataset.equipo = equipo; // Guardamos el nombre del equipo en un atributo de la fila
+            fila.style.display = input && equipo.includes(input) ? "" : "none";
+            return;
+        }
+
+        let nombre = columnas[0].textContent.toLowerCase();
+        let supervisor = columnas[3].textContent.toLowerCase();
+        let equipoEjecutor = fila.previousElementSibling?.dataset.equipo || "";
+
+        if (nombre.includes(input) || supervisor.includes(input) || equipoEjecutor.includes(input)) {
+            fila.style.display = "";
+            if (fila.previousElementSibling?.dataset.equipo) {
+                fila.previousElementSibling.style.display = ""; // Asegurar que el título del equipo se muestre si tiene resultados
+            }
+        } else {
+            fila.style.display = "none";
+        }
+    });
 }
 
 document.getElementById("btn-ver-instructores").addEventListener("click", function () {

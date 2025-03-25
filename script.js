@@ -140,6 +140,37 @@ async function cargarDatos(url) {
     document.getElementById("search-container").style.display = "block";
 }
 
+function filtrarFuncionarios() {
+    let input = document.getElementById("search").value.toLowerCase();
+    let filas = document.querySelectorAll("#directorio tbody tr");
+
+    filas.forEach(fila => {
+        let columnas = fila.getElementsByTagName("td");
+
+        if (columnas.length === 1) {
+            // Es un encabezado de oficina
+            let oficina = columnas[0].textContent.toLowerCase();
+            fila.dataset.oficina = oficina; // Guardamos la oficina en un atributo
+            fila.style.display = input && oficina.includes(input) ? "" : "none";
+            return;
+        }
+
+        let nombre = columnas[0].textContent.toLowerCase();
+        let funciones = columnas[3].textContent.toLowerCase();
+        let oficina = fila.previousElementSibling?.dataset.oficina || "";
+
+        if (nombre.includes(input) || funciones.includes(input) || oficina.includes(input)) {
+            fila.style.display = "";
+            if (fila.previousElementSibling?.dataset.oficina) {
+                fila.previousElementSibling.style.display = ""; // Asegurar que el título de la oficina se muestre si hay coincidencias
+            }
+        } else {
+            fila.style.display = "none";
+        }
+    });
+}
+
+
 document.getElementById("btn-ver-funcionarios").addEventListener("click", () => {
     cargarDatos(funcionariosURL);
 });
