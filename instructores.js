@@ -55,6 +55,8 @@ async function cargarInstructores() {
                 tdEquipo.colSpan = 4;
                 tdEquipo.style.fontWeight = "bold";
                 tdEquipo.style.backgroundColor = "#f0f0f0";
+                tdEquipo.style.textAlign = "center"; // Centrar el texto
+                tdEquipo.style.padding = "10px"; // Agregar espacio para mejor visualización
                 tdEquipo.textContent = equipo;
                 trEquipo.appendChild(tdEquipo);
                 tbody.appendChild(trEquipo);

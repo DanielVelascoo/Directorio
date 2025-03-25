@@ -101,6 +101,8 @@ async function cargarDatos(url) {
             tdOficina.colSpan = 4;
             tdOficina.style.fontWeight = "bold";
             tdOficina.style.backgroundColor = "#f0f0f0";
+            tdOficina.style.textAlign = "center"; // Centrar el texto
+            tdOficina.style.padding = "10px"; // Agregar espacio para mejor visualización
             tdOficina.textContent = oficina;
             trOficina.appendChild(tdOficina);
             tbody.appendChild(trOficina);
