@@ -62,10 +62,10 @@ async function cargarDatos(url) {
 
             let funcionario = {
                 numDocumento: documento,
-                nombres: fila[indiceNombres] || "Nombre desconocido",
+                nombres: fila[indiceNombres] || "Sin Asignar",
                 correo: fila[indiceCorreo] || "Sin correo",
                 celular: fila[indiceCelular] || "Sin celular",
-                funciones: fila[indiceFunciones] || "Sin funciones",
+                funciones: fila[indiceFunciones] || "Funciones sin asignar",
                 subordinados: [],
                 oficina: oficina,
                 superior: superior
