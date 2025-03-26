@@ -12,13 +12,13 @@
     font-weight: 400;
 }
 
-
 body {
     text-align: center;
-    background: linear-gradient(to right,  #2c3e50, #4ca1af);
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
     color: white;
     margin: 0;
     padding: 0;
+    font-family: 'WorkSans-Regular', sans-serif;
 }
 
 .logo {
@@ -37,24 +37,26 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    padding: 20px;
 }
 
 h1 {
     font-family: 'WorkSans-SemiBold';
     font-size: 2.5em;
     margin-bottom: 20px;
+    transition: font-size 0.3s ease;
 }
 
-
+/* Caja de búsqueda con bordes más suaves y sombra ligera */
 .search-box {
     display: flex;
     align-items: center;
     background: white;
-    padding: 5px;
-    border-radius: 25px;
-    width: 20%;
+    padding: 8px;
+    border-radius: 30px; /* Bordes más redondeados */
+    width: 15%;
     border: 2px solid #2cb610;
-    box-shadow: 0px 4px 8px rgba(0, 128, 0, 0.3);
+    box-shadow: 0px 4px 10px rgba(0, 128, 0, 0.2); /* Sombra ligera */
     margin-bottom: 15px;
 }
 
@@ -63,13 +65,17 @@ h1 {
     border: none;
     padding: 10px;
     font-size: 16px;
+    text-align: center;
     border-radius: 20px;
     outline: none;
+    transition: box-shadow 0.3s ease;
 }
 
 .search-box input::placeholder {
     color: #2c3e50;
 }
+
+
 
 .buttons {
     margin-top: 20px;
@@ -86,10 +92,13 @@ button {
     cursor: pointer;
     border-radius: 5px;
     margin-bottom: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 8px rgba(0, 128, 0, 0.3); /* Sombra ligera */
 }
 
 button:hover {
     background: #3bdb6b;
+    transform: translateY(-3px);
 }
 
 /* Contenedor de la tabla */
@@ -102,6 +111,13 @@ button:hover {
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     width: 90%;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Mostrar el contenedor de la tabla */
+#directorio-container.show {
+    display: block;
+    opacity: 1;
 }
 
 /* Tabla */
@@ -109,6 +125,8 @@ table {
     width: 100%;
     border-collapse: collapse;
     color: black;
+    border-radius: 10px; /* Bordes redondeados */
+    overflow: hidden;
 }
 
 th, td {
@@ -121,11 +139,19 @@ th, td {
 /* Cabecera fija */
 th {
     position: sticky;
-    text-align: center;
     top: 0;
     background-color: #2cb610;
     color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Filas alternas */
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #e1f7d5;
 }
 
 /* Responsividad */
